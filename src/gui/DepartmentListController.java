@@ -1,5 +1,6 @@
 package gui;
 
+import gui.listeners.DataChangeListener;
 import gui.util.Alerts;
 import gui.util.Utils;
 import javafx.collections.FXCollections;
@@ -26,7 +27,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class DepartmentListController implements Initializable {
+public class DepartmentListController implements Initializable, DataChangeListener {
 
     private DepartmentService service;
 
@@ -46,7 +47,9 @@ public class DepartmentListController implements Initializable {
     @FXML
     public void onBtNewAction(ActionEvent event){
         Stage parentStage = Utils.currentStage(event);
-        createDialogForm("/gui/departmentform.fxml", parentStage);
+        Department obj = new Department();
+
+        createDialogForm(obj, "/gui/departmentform.fxml", parentStage);
     }
 
     public void setDepartmentService(DepartmentService service){
@@ -76,21 +79,35 @@ public class DepartmentListController implements Initializable {
         tableViewDepartments.setItems(obsList);
     }
 
-    private  void createDialogForm(String absoluteName, Stage parentStage){
+    private  void createDialogForm(Department obj, String absoluteName, Stage parentStage){
         try{
             FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
             Pane pane = loader.load();
+
+            DepartmentFormController controller = loader.getController();
+            controller.setDepartment(obj);
+            controller.setDepartmentService(new DepartmentService());
+            controller.subscribeDataChangeListener(this);
+            controller.updateFormData();
+
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Enter Department data");
             dialogStage.setScene(new Scene(pane));
             dialogStage.setResizable(false);
             dialogStage.initOwner(parentStage);
+
             dialogStage.initModality(Modality.WINDOW_MODAL);
             dialogStage.showAndWait();
         }catch(IOException e){
             Alerts.showAlert("IO Exception", "Error loading view", e.getMessage(), Alert.AlertType.ERROR);
             e.printStackTrace();
+        }catch (IllegalStateException e){
+            Alerts.showAlert("Exception", "Error", e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
+    @Override
+    public void onDataChanged() {
+        updateTableView();
+    }
 }

@@ -1,5 +1,6 @@
 package model.services;
 
+import db.DbException;
 import model.dao.DaoFactory;
 import model.dao.DepartmentDao;
 import model.entities.Department;
@@ -21,4 +22,11 @@ public class DepartmentService {
             dao.update(obj);
         }
     }
+
+
+    public void remove(Department obj){
+       dao.deleteById(obj.getId());
+    }
+
+
 }

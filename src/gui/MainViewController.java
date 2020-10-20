@@ -11,10 +11,9 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import model.services.DepartmentService;
+import model.services.SellerService;
 import sample.Main;
 
-
-import javax.imageio.IIOException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -31,19 +30,25 @@ public class MainViewController implements Initializable {
     private MenuItem menuItemAbout;
 
     @FXML
-    public void onMenuItemSellerAction(){
-        System.out.println("True");
+    public void onMenuItemSellerAction() {
+        loadView("/gui/sellerlist.fxml", (SellerListController controller) -> {
+            controller.setSellerService(new SellerService());
+            controller.updateTableView();
+        });
     }
+
     @FXML
-    public void onMenuItemDepartmentAction(){
+    public void onMenuItemDepartmentAction() {
         loadView("/gui/departmentlist.fxml", (DepartmentListController controller) -> {
             controller.setDepartmentService(new DepartmentService());
             controller.updateTableView();
         });
     }
+
     @FXML
-    public void onMenuItemAboutAction(){
-        loadView("/gui/about.fxml", x -> {});
+    public void onMenuItemAboutAction() {
+        loadView("/gui/about.fxml", x -> {
+        });
     }
 
 
@@ -52,7 +57,7 @@ public class MainViewController implements Initializable {
 
     }
 
-    private synchronized <T> void loadView(String absoluteName, Consumer<T> initializingAction){
+    private synchronized <T> void loadView(String absoluteName, Consumer<T> initializingAction) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
             VBox newVBox = loader.load();
@@ -66,7 +71,7 @@ public class MainViewController implements Initializable {
 
             T controller = loader.getController();
             initializingAction.accept(controller);
-        }catch (IOException e){
+        } catch (IOException e) {
             Alerts.showAlert("IO Exception", "Error loading view", e.getMessage(), Alert.AlertType.ERROR);
             e.printStackTrace();
         }

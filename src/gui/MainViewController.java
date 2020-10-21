@@ -31,7 +31,7 @@ public class MainViewController implements Initializable {
 
     @FXML
     public void onMenuItemSellerAction() {
-        loadView("/gui/sellerlist.fxml", (SellerListController controller) -> {
+        loadView("/gui/SellerList.fxml", (SellerListController controller) -> {
             controller.setSellerService(new SellerService());
             controller.updateTableView();
         });
@@ -39,7 +39,7 @@ public class MainViewController implements Initializable {
 
     @FXML
     public void onMenuItemDepartmentAction() {
-        loadView("/gui/departmentlist.fxml", (DepartmentListController controller) -> {
+        loadView("/gui/DepartmentList.fxml", (DepartmentListController controller) -> {
             controller.setDepartmentService(new DepartmentService());
             controller.updateTableView();
         });
@@ -47,7 +47,7 @@ public class MainViewController implements Initializable {
 
     @FXML
     public void onMenuItemAboutAction() {
-        loadView("/gui/about.fxml", x -> {
+        loadView("/gui/About.fxml", x -> {
         });
     }
 
@@ -73,6 +73,11 @@ public class MainViewController implements Initializable {
             initializingAction.accept(controller);
         } catch (IOException e) {
             Alerts.showAlert("IO Exception", "Error loading view", e.getMessage(), Alert.AlertType.ERROR);
+            e.printStackTrace();
+
+        } catch (RuntimeException e) {
+            System.out.println(absoluteName);
+            System.out.println(getClass().getResource(absoluteName));
             e.printStackTrace();
         }
     }

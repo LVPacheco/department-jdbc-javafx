@@ -27,6 +27,7 @@ public class Utils {
             return null;
         }
     }
+
     public static Double tryParsetoDouble(String str) {
         try {
             return Double.parseDouble(str);
@@ -76,9 +77,11 @@ public class Utils {
         datePicker.setConverter(new StringConverter<LocalDate>() {
 
             DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(format);
+
             {
                 datePicker.setPromptText(format.toLowerCase());
             }
+
             @Override
             public String toString(LocalDate date) {
                 if (date != null) {
@@ -87,6 +90,7 @@ public class Utils {
                     return "";
                 }
             }
+
             @Override
             public LocalDate fromString(String string) {
                 if (string != null && !string.isEmpty()) {

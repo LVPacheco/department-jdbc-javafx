@@ -11,6 +11,10 @@ import java.io.IOException;
 public class Main extends Application {
     private static Scene mainScene;
 
+    public static void main(String[] args) {
+        launch(args);
+    }
+
     @Override
     public void start(Stage primaryStage) {
         try {
@@ -27,7 +31,7 @@ public class Main extends Application {
         }
     }
 
-    public static Scene getMainScene(){
+    public static Scene getMainScene() {
         return mainScene;
     }
 

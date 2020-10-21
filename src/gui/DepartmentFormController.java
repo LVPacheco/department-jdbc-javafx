@@ -16,6 +16,7 @@ import model.exceptions.ValidationException;
 import model.services.DepartmentService;
 
 import javafx.event.ActionEvent;
+
 import java.net.URL;
 import java.util.*;
 
@@ -37,17 +38,17 @@ public class DepartmentFormController implements Initializable {
     private Button btCancel;
 
     @FXML
-    public void onBtSaveAction(ActionEvent event){
-        if(entity==null) throw new IllegalStateException("Entity was null");
-        if(service == null) throw new IllegalStateException("Service was null");
+    public void onBtSaveAction(ActionEvent event) {
+        if (entity == null) throw new IllegalStateException("Entity was null");
+        if (service == null) throw new IllegalStateException("Service was null");
         try {
             entity = getFormData();
             service.saveOrUpdate(entity);
             notifyDataChangeListeners();
             Utils.currentStage(event).close();
-        }catch (DbException e){
-            Alerts.showAlert("Error saving object", null,e.getMessage(), Alert.AlertType.ERROR);
-        }catch (ValidationException e){
+        } catch (DbException e) {
+            Alerts.showAlert("Error saving object", null, e.getMessage(), Alert.AlertType.ERROR);
+        } catch (ValidationException e) {
             setErrorMessages(e.getErrors());
         }
 
@@ -61,51 +62,50 @@ public class DepartmentFormController implements Initializable {
         Department obj = new Department();
         ValidationException exception = new ValidationException("Validation error");
         obj.setId(Utils.tryParsetoInt(tfId.getText()));
-        if(tfName.getText()==null||tfName.getText().equals("")) exception.addError("name", "Field can't be empty");
+        if (tfName.getText() == null || tfName.getText().equals("")) exception.addError("name", "Field can't be empty");
         obj.setName(tfName.getText());
-        if(exception.getErrors().size()>0) throw exception;
+        if (exception.getErrors().size() > 0) throw exception;
         return obj;
     }
 
     @FXML
-    public void onBtCancelAction(ActionEvent event){
+    public void onBtCancelAction(ActionEvent event) {
         Utils.currentStage(event).close();
     }
 
 
-
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-    initializeNodes();
+        initializeNodes();
     }
 
-    private void initializeNodes(){
+    private void initializeNodes() {
         Constraints.setTextFieldInteger(tfId);
         Constraints.setTextFieldMaxLength(tfName, 30);
     }
 
-    public void setDepartment(Department entity){
+    public void setDepartment(Department entity) {
         this.entity = entity;
     }
 
-    public void setDepartmentService(DepartmentService service){
+    public void setDepartmentService(DepartmentService service) {
         this.service = service;
     }
 
-    public void updateFormData(){
-        if(entity==null) throw new IllegalStateException("Entity null");
+    public void updateFormData() {
+        if (entity == null) throw new IllegalStateException("Entity null");
         tfId.setText(String.valueOf(entity.getId()));
         tfName.setText(entity.getName());
 
     }
 
-    public void subscribeDataChangeListener(DataChangeListener listener){
+    public void subscribeDataChangeListener(DataChangeListener listener) {
         dataChangeListeners.add(listener);
     }
 
-    private void setErrorMessages(Map<String, String> errors){
+    private void setErrorMessages(Map<String, String> errors) {
         Set<String> fields = errors.keySet();
-        if(fields.contains("name")) lbError.setText(errors.get("name"));
+        if (fields.contains("name")) lbError.setText(errors.get("name"));
     }
 
 }
